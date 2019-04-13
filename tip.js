@@ -3,19 +3,30 @@ let valCalitate = document.querySelector('#dropQ');
 let valBacsis = document.getElementById('val-bacsis');
 let valTotala = document.getElementById('val-totala');
 let eroare = document.getElementById('eroare');
-
-// function onlyNumber(event){
-//   if ((event.keyCode<96 || event.keyCode>105) && 
-//       (event.keyCode<48 || event.keyCode>57) && 
-//       (event.keyCode!==110) && (event.keyCode!==190) && 
-//      (event.keyCode!==8) && (event.keyCode!==9)) {
-//     eroare.innerHTML="Trebuie sa introduceti doar cifre!"
-//     eroare.style.color='red';
-//     input.style.borderColor='red';
-//   }
-//   else {eroare.innerHTML="";
-//         input.style.borderColor='grey';}
-// }
+let procentBacsis=document.querySelector('#procent-bacsis');
+let calitateProcentBacsis = [
+  {
+    calitate: 'default',
+    bacsis: 0
+  },
+ 
+  {
+    calitate: 'mediu',
+    bacsis: 5
+  },
+  {
+    calitate: 'prost',
+    bacsis: 0
+  },
+  {
+    calitate: 'execrabil',
+    bacsis: -5
+  },
+  {
+    calitate: 'bun',
+    bacsis: 10
+  }
+]
 
 function onlyNumber() {
   if (isNaN(input.value)) {
@@ -31,26 +42,23 @@ function onlyNumber() {
 
 input.addEventListener('keyup', onlyNumber);
 
-function calcul(event) {
-  let valCalitateServiciu = valCalitate.options[valCalitate.selectedIndex].value;
-
-  if (valCalitateServiciu == "bun" && !isNaN(input.value)) {
-    valBacsis.innerHTML = Math.round((input.value / 10) * 100) / 100;
-    valTotala.innerHTML = Math.round((parseFloat(input.value / 10) + parseFloat(input.value)) * 100) / 100;
-  } else
-    if (valCalitateServiciu == "mediu" && !isNaN(input.value)) {
-      valBacsis.innerHTML = Math.round((input.value / 20) * 100) / 100;
-      valTotala.innerHTML = Math.round((parseFloat(input.value / 20) + parseFloat(input.value)) * 100) / 100;
+function calcul() {
+  let valCalitateServiciu = valCalitate.options[valCalitate.selectedIndex].value; 
+for (let i = 0; i < calitateProcentBacsis.length; i++) {
+  if ((valCalitateServiciu == calitateProcentBacsis[i].calitate) && (!isNaN(input.value))) {
+    valBacsis.innerHTML = parseFloat(input.value * (calitateProcentBacsis[i].bacsis / 100)).toFixed(2);
+    valTotala.innerHTML = parseFloat((input.value * (calitateProcentBacsis[i].bacsis / 100)) + parseFloat(input.value)).toFixed(2);
+    procentBacsis.innerHTML = 'procent bacsis: ' + calitateProcentBacsis[i].bacsis + '%';
+    procentBacsis.style.color = 'green';
     } else
-      if (((valCalitateServiciu == "prost") || (valCalitateServiciu == "default")) && !isNaN(input.value)) {
-        valBacsis.innerHTML = "0.00";
-        valTotala.innerHTML = Math.round((input.value) * 100) / 100;
-      } else {
-        valBacsis.innerHTML = "Valoare introdusa gresita!";
-        valBacsis.style.color = '#FFB5B5';
-        valTotala.innerHTML = "Valoare introdusa gresita!";
-        valTotala.style.color = '#FFB5B5';
-      }
+    if (isNaN(input.value)) {
+      valBacsis.innerHTML = "Valoare introdusa gresita!";
+      valBacsis.style.color = '#FFB5B5';
+      valTotala.innerHTML = "Valoare introdusa gresita!";
+      valTotala.style.color = '#FFB5B5';
+      procentBacsis.innerHTML = ''
+    } 
+  }
 }
 
 valCalitate.addEventListener('input', calcul);
